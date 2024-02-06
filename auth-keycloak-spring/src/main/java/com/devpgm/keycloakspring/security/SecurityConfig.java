@@ -15,13 +15,17 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/products/get").permitAll()
-                        .requestMatchers("/products/post").authenticated()
+                        .requestMatchers("/products/get/*").permitAll()
+                        .requestMatchers(
+                                "/products/post/admin",
+                                "/products/post/user",
+                                "products/post/guest")
+                        .authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt ->
                                 jwt.jwtAuthenticationConverter(new JwtConverter())
-                                .jwkSetUri("http://localhost:8080/realms/pgm/protocol/openid-connect/certs"))
+                                        .jwkSetUri("http://localhost:8080/realms/pgm/protocol/openid-connect/certs"))
 
                 )
 //                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
